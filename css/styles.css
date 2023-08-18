@@ -92,7 +92,9 @@ h1 {
 
 .movie-icon {
   border-radius: 50%;
-  max-width: 140px;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
 }
 
 .movie-details {
@@ -118,7 +120,8 @@ h1 {
 }
 
 .movie-rating,
-.movie-bookmark {
+.movie-bookmark,
+.movie-bookmarked {
   color: #ffffff;
   font-size: 1.8rem;
   font-weight: 400;
@@ -130,6 +133,12 @@ h1 {
 
 .movie-bookmark::before {
   content: url(/images/heart.svg);
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.movie-bookmarked::before {
+  content: url(/images/heart-fill.svg);
   cursor: pointer;
   margin-right: 10px;
 }
