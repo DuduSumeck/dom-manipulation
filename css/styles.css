@@ -85,6 +85,7 @@ h1 {
 }
 
 .movie-card {
+  flex-grow: 1;
   display: flex;
   align-items: center;
   gap: 4rem;
@@ -111,7 +112,7 @@ h1 {
 
 .movie-data {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
 }
 
 .movie-rating::before {
