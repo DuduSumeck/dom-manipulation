@@ -1,4 +1,25 @@
-async function fetchPopularMovies() {
+(() => {
+  const form = document.querySelector(".search-form");
+  const input = document.querySelector(".search-input");
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const query = input.value.trim();
+    if (query) {
+      const movies = document.querySelector(".movies");
+      movies.innerHTML = "";
+
+      fetchMovies(`https://api.themoviedb.org/3/search/movie?query=${query}`);
+    }
+  });
+})();
+
+fetchMovies();
+
+async function fetchMovies(
+  url = "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1"
+) {
   try {
     const options = {
       method: "GET",
@@ -8,10 +29,7 @@ async function fetchPopularMovies() {
           "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1NjE5NGMzNDFlNTk3OGNlNmU1ZDlkOGE4NTYzOGQxYSIsInN1YiI6IjY0YzU3NmRmZWVjNWI1MDBlMjNiYmEzYSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.AQV8GQMvfS7PByxBHJY0itt9PiuVVn2TJt3If6SxxAM",
       },
     };
-    const response = await fetch(
-      "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1",
-      options
-    );
+    const response = await fetch(url, options);
 
     if (!response.ok) {
       throw new Error(`HTTP error: ${response.status}`);
@@ -52,6 +70,10 @@ function renderMovie(movie) {
   const movieIcon = document.createElement("img");
   movieIcon.classList.add("movie-icon");
   movieIcon.setAttribute("src", movie.image);
+
+  movieIcon.addEventListener("error", () => {
+    movieIcon.setAttribute("src", "/images/film.png");
+  });
 
   movieCard.appendChild(movieIcon);
 
@@ -99,5 +121,3 @@ function renderMovie(movie) {
 
   movies.appendChild(movieContainer);
 }
-
-fetchPopularMovies();
