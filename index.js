@@ -1,4 +1,17 @@
 (() => {
+  const toogle = document.querySelector(".search-toogle");
+  toogle.addEventListener("change", async () => {
+    if (toogle.checked) {
+      const bookmarkedMovies = getBookmarkedMovies();
+      renderMovies(bookmarkedMovies);
+    } else {
+      const popularMovies = await getPopularMovies();
+      renderMovies(popularMovies);
+    }
+  });
+})();
+
+(() => {
   const form = document.querySelector(".search-form");
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -14,11 +27,16 @@
 })();
 
 document.addEventListener("DOMContentLoaded", async () => {
+  const popularMovies = await getPopularMovies();
+  renderMovies(popularMovies);
+});
+
+async function getPopularMovies() {
   const url =
     "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1";
   const movies = await fetchMovies(url);
-  renderMovies(movies);
-});
+  return movies;
+}
 
 async function fetchMovies(url) {
   const options = {
@@ -89,12 +107,11 @@ function renderMovies(movies) {
     const bookmarkedMovies = getBookmarkedMovies();
     movieBookmark.classList.toggle(
       "movie-bookmarked",
-      bookmarkedMovies.includes(id)
+      bookmarkedMovies.map((bookmarked) => bookmarked.id).includes(id)
     );
 
-    movieBookmark.addEventListener("click", (e) => {
-      const movieId = parseInt(movieBookmark.dataset.movieId);
-      toogleBookmark(e.target, movieId);
+    movieBookmark.addEventListener("click", () => {
+      toogleBookmark(movieBookmark, movie);
     });
 
     const bookmarkText = document.createTextNode("Favoritar");
@@ -119,16 +136,20 @@ function renderMovies(movies) {
   });
 }
 
-function toogleBookmark(bookmark, movieId) {
+function toogleBookmark(bookmark, movie) {
   const bookmarkedMovies = getBookmarkedMovies();
-  const index = bookmarkedMovies.indexOf(movieId);
-  if (index === -1) bookmarkedMovies.push(movieId);
-  else bookmarkedMovies.splice(index, 1);
 
-  bookmark.classList.toggle(
-    "movie-bookmarked",
-    bookmarkedMovies.includes(movieId)
-  );
+  const index = bookmarkedMovies
+    .map((bookmarked) => bookmarked.id)
+    .indexOf(movie.id);
+
+  if (index === -1) {
+    bookmarkedMovies.push(movie);
+    bookmark.classList.add("movie-bookmarked");
+  } else {
+    bookmarkedMovies.splice(index, 1);
+    bookmark.classList.remove("movie-bookmarked");
+  }
 
   localStorage.setItem("bookmarkedMovies", JSON.stringify(bookmarkedMovies));
 }
