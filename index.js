@@ -1,3 +1,5 @@
+import { apiKey } from "./env.js";
+
 (() => {
   const toogle = document.querySelector(".search-toogle");
   toogle.addEventListener("change", async () => {
@@ -43,8 +45,7 @@ async function fetchMovies(url) {
     method: "GET",
     headers: {
       accept: "application/json",
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1NjE5NGMzNDFlNTk3OGNlNmU1ZDlkOGE4NTYzOGQxYSIsInN1YiI6IjY0YzU3NmRmZWVjNWI1MDBlMjNiYmEzYSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.AQV8GQMvfS7PByxBHJY0itt9PiuVVn2TJt3If6SxxAM",
+      Authorization: `Bearer ${apiKey}`,
     },
   };
   const response = await fetch(url, options);
